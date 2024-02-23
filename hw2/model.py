@@ -45,13 +45,25 @@ class NBLangIDModel:
                 
                 n_gram_counts[n_gram][lang] += 1
        
-        print(n_gram_counts)
-
+        #print(n_gram_counts)
+        
+        n_gram_probs = {}
         
         #loop though and +1 for LaPlace smoothing, then normalize
+        for n_gram_key in n_gram_counts.keys():
+            
+            n_gram_values = n_gram_counts.get(n_gram_key)
+            
+            for lang in n_gram_values:
+                
+                n_gram_values[lang] += 1
+            
+            n_gram_probs[n_gram_key] = normalize(n_gram_values, log_prob=True)
+            
+        print(n_gram_counts)
+        print("\n\n\n")
+        print(n_gram_probs)
 
-
-        raise NotImplementedError
 
     def predict(self, test_sentences: List[str]) -> List[str]:
         """
