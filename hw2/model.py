@@ -1,4 +1,5 @@
 from typing import Dict, List
+from util import get_char_ngrams, load_data, normalize, argmax
 
 
 class NBLangIDModel:
@@ -23,6 +24,28 @@ class NBLangIDModel:
             train_sentences (List[str]): sentences from the training data
             train_labels (List[str]): labels from the training data
         """
+       
+        # COUNT N_GRAMS
+        # for each element in train_sentences: call get_char_ngrams with self.n_gram_size
+            # add each result to dictionaries (figure this out more)
+            # add each result to our set of all 
+
+        n_gram_counts = {}
+
+        for i in range(len(train_sentences)):
+            n_grams = get_char_ngrams(train_sentences[i], self.n_gram_size)
+            lang = train_labels[i]
+
+            for n_gram in n_grams:
+                
+                n_gram_counts[n_gram][lang] += 1
+       
+        print(n_gram_counts)
+
+        
+        #loop though and +1 for LaPlace smoothing, then normalize
+
+
         raise NotImplementedError
 
     def predict(self, test_sentences: List[str]) -> List[str]:
