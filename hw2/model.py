@@ -33,10 +33,15 @@ class NBLangIDModel:
         n_gram_counts = {}
 
         for i in range(len(train_sentences)):
-            n_grams = get_char_ngrams(train_sentences[i], self.n_gram_size)
+            n_grams = get_char_ngrams(train_sentences[i], self.ngram_size)
             lang = train_labels[i]
 
             for n_gram in n_grams:
+                
+                if n_gram not in n_gram_counts:
+                    n_gram_counts[n_gram] = {}
+                if lang not in n_gram_counts[n_gram]:
+                    n_gram_counts[n_gram][lang] = 0
                 
                 n_gram_counts[n_gram][lang] += 1
        
