@@ -31,10 +31,16 @@ class NBLangIDModel:
             # add each result to our set of all 
 
         n_gram_counts = {}
+        lang_counts = {}
 
         for i in range(len(train_sentences)):
             n_grams = get_char_ngrams(train_sentences[i], self.ngram_size)
             lang = train_labels[i]
+            
+            if lang not in lang_counts:
+                lang_counts[lang] = 1
+            else:
+                lang_counts[lang] += 1
 
             for n_gram in n_grams:
                 
@@ -59,10 +65,20 @@ class NBLangIDModel:
                 n_gram_values[lang] += 1
             
             n_gram_probs[n_gram_key] = normalize(n_gram_values, log_prob=True)
-            
-        print(n_gram_counts)
-        print("\n\n\n")
-        print(n_gram_probs)
+        
+        # self._likelihoods is a dict of dict where [to: [spanish: # of to's in spanish+1/# of ngrams], etc.]
+        self._likelihoods = n_gram_probs
+        
+        for lang in lang_counts.keys():
+            lang_counts[lang] /= len(train_sentences)
+        
+        #self.prior is a dict of span: # of sentences in spanish / total # of sentences
+        self.prior = lang_counts
+        
+        # print("lang counts:", lang_counts)
+        # print(n_gram_counts)
+        # print("\n\n\n")
+        # print(n_gram_probs)
 
 
     def predict(self, test_sentences: List[str]) -> List[str]:
