@@ -32,10 +32,14 @@ class NBLangIDModel:
 
         n_gram_counts = {}
         lang_counts = {}
+        languages = []
 
         for i in range(len(train_sentences)):
             n_grams = get_char_ngrams(train_sentences[i], self.ngram_size)
             lang = train_labels[i]
+            
+            if lang not in languages: #running list of all languages
+                languages.append(lang)
             
             if lang not in lang_counts:
                 lang_counts[lang] = 1
@@ -50,21 +54,26 @@ class NBLangIDModel:
                     n_gram_counts[n_gram][lang] = 0
                 
                 n_gram_counts[n_gram][lang] += 1
-       
-        #print(n_gram_counts)
-        
+
+        print("n gram counts: ", n_gram_counts, "\n")
+
         n_gram_probs = {}
         
         #loop though and +1 for LaPlace smoothing, then normalize
         for n_gram_key in n_gram_counts.keys():
             
-            n_gram_values = n_gram_counts.get(n_gram_key)
-            
-            for lang in n_gram_values:
+            for lang in languages:
                 
-                n_gram_values[lang] += 1
+                if lang not in n_gram_counts[n_gram_key]:
+                    n_gram_counts[n_gram_key][lang] = 1
+                else:
+                    n_gram_counts[n_gram_key][lang] += 1
             
-            n_gram_probs[n_gram_key] = normalize(n_gram_values, log_prob=True)
+            print("n gram counts after adding one: ", n_gram_counts[n_gram_key], "\n")
+            
+            n_gram_probs[n_gram_key] = normalize(n_gram_counts[n_gram_key], log_prob=False)
+        
+        print("n_gram_count post adding 1 and normalizing", n_gram_probs, "\n")
         
         # self._likelihoods is a dict of dict where [to: [spanish: # of to's in spanish+1/# of ngrams], etc.]
         self._likelihoods = n_gram_probs
@@ -75,11 +84,7 @@ class NBLangIDModel:
         #self.prior is a dict of span: # of sentences in spanish / total # of sentences
         self.prior = lang_counts
         
-        # print("lang counts:", lang_counts)
-        # print(n_gram_counts)
-        # print("\n\n\n")
-        # print(n_gram_probs)
-
+        print("self likelihoods: ", self._likelihoods, "\n self.prior:", self.prior, "\n")
 
     def predict(self, test_sentences: List[str]) -> List[str]:
         """
@@ -91,7 +96,21 @@ class NBLangIDModel:
         Returns:
             List[str]: the predicted languages (in the same order)
         """
-        raise NotImplementedError
+        predictions = []
+        
+        for test_sentence in test_sentences:
+            
+            lang_likelihood = self.predict_one_log_proba(test_sentence) #should normally be test sentences
+            
+            for lang_key in lang_likelihood.keys():
+                
+                lang_likelihood[lang_key] *= self.prior[lang_key]          
+
+            predictions.append(argmax(lang_likelihood))
+            
+        print("predictions", predictions)
+                                     
+                    
 
     def predict_one_log_proba(self, test_sentence: str) -> Dict[str, float]:
         """
@@ -103,6 +122,25 @@ class NBLangIDModel:
         Returns:
             Dict[str, float]: mapping of language --> probability
         """
-        assert not (self._priors is None or self._likelihoods is None), \
-            "Cannot predict without a model!"
-        raise NotImplementedError
+        # assert not (self._priors is None or self._likelihoods is None) #"Cannot predict without a model!"
+        
+        lang_likelihood = {} # for each lang the likelihood of the sentence
+            
+        n_grams = get_char_ngrams(test_sentence, self.ngram_size) # ngrams in sentence
+        print("nGrams", n_grams)
+        
+        for n_gram in n_grams:
+            
+            if n_gram in self._likelihoods:
+                
+                for lang in self._likelihoods[n_gram]: #for each language that the ngram could be
+                    
+                    if lang not in lang_likelihood:
+                        
+                        lang_likelihood[lang] = self._likelihoods[n_gram][lang]
+                    else:
+                        lang_likelihood[lang] += self._likelihoods[n_gram][lang] #add log probs
+        
+        print("likelhood of each sentence:", lang_likelihood, "\n") 
+                       
+        return lang_likelihood
