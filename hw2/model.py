@@ -71,7 +71,9 @@ class NBLangIDModel:
             
             print("n gram counts after adding one: ", n_gram_counts[n_gram_key], "\n")
             
-            n_gram_probs[n_gram_key] = normalize(n_gram_counts[n_gram_key], log_prob=False)
+            # this is where we are messing up -- I think we are calling the wrong values
+            # she may be expecting our dictionary to be a different format
+            n_gram_probs[n_gram_key] = normalize(n_gram_counts[n_gram_key], log_prob=True)
         
         print("n_gram_count post adding 1 and normalizing", n_gram_probs, "\n")
         
