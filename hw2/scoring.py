@@ -14,7 +14,15 @@ def accuracy_score(y_true: List[Any], y_pred: List[Any]) -> float:
     Returns:
         float: accuracy score
     """
-    raise NotImplementedError
+    correct = 0
+
+    for i in range(len(y_true)):
+        if (y_true[i] == y_pred[i]):
+            correct += 1
+
+    score = correct / len(y_true)
+
+    return score
 
 
 def confusion_matrix(y_true: List[Any], y_pred: List[Any], labels: List[Any]) \
