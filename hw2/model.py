@@ -1,5 +1,6 @@
 from typing import Dict, List
 from util import get_char_ngrams, load_data, normalize, argmax
+import math
 
 
 class NBLangIDModel:
@@ -43,7 +44,7 @@ class NBLangIDModel:
             else:
                 lang_counts[lang] += 1
                 
-            if lang not in n_grams:
+            if lang not in n_gram_counts:
                 n_gram_counts[lang] = {}
 
             for n_gram in n_grams:
@@ -76,7 +77,7 @@ class NBLangIDModel:
             
             # this is where we are messing up -- I think we are calling the wrong values
             # she may be expecting our dictionary to be a different format
-            n_gram_probs[lang_key] = normalize(n_gram_counts[lang_key], log_prob=False)
+            n_gram_probs[lang_key] = normalize(n_gram_counts[lang_key], log_prob=True)
         
         print("n_gram_count post adding 1 and normalizing", n_gram_probs, "\n")
         
@@ -84,7 +85,7 @@ class NBLangIDModel:
         self._likelihoods = n_gram_probs
         
         for lang in lang_counts.keys():
-            lang_counts[lang] /= len(train_sentences)
+            lang_counts[lang] = math.log(lang_counts[lang]/len(train_sentences)) #changed this to accommodate logs
         
         #self.prior is a dict of span: # of sentences in spanish / total # of sentences
         self.prior = lang_counts
@@ -146,16 +147,15 @@ class NBLangIDModel:
                     
                     if n_gram in self._likelihoods[lang]: # if we dont have n_gram in training, ignore
                         
-                        lang_likelihood[lang] *= self._likelihoods[lang][n_gram] #add log probs
+                        lang_likelihood[lang] += self._likelihoods[lang][n_gram] #add log probs
        
         print("likelhood of each sentence: before", lang_likelihood, "\n") 
         
         for lang_key in lang_likelihood.keys():
-            print("lang_key",lang_key)
                 
-            lang_likelihood[lang_key] *= self.prior[lang_key] 
+            lang_likelihood[lang_key] += self.prior[lang_key] # changed cause back to log probs
         
-        print("likelhood of each sentence:", lang_likelihood, "\n") 
+        print("likelhood of each sentence in log prob:", lang_likelihood, "\n") 
                     
         return lang_likelihood       
         
