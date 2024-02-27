@@ -1,6 +1,8 @@
 import math
 
 from model import NBLangIDModel
+from scoring import accuracy_score, confusion_matrix
+from util import print_confusion_matrix
 
 
 def main():
@@ -22,6 +24,14 @@ def main():
     print({lang: math.e ** log_prob
            for lang, log_prob in results.items()})
 
+    # added this test for accuracy_score
+    y_true = ["spa", "eng", "spa"]
+    y_pred = ["eng", "eng", "spa"]
+    print(accuracy_score(y_true, y_pred))
+
+    y_true = ["spa", "eng", "spa"]
+    y_pred = ["eng", "eng", "spa"]
+    print_confusion_matrix(confusion_matrix(y_true, y_pred, ["spa", "eng", "fra"]), ["spa", "eng", "fra"])
 
 if __name__ == "__main__":
     main()

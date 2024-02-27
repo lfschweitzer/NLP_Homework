@@ -43,4 +43,19 @@ def confusion_matrix(y_true: List[Any], y_pred: List[Any], labels: List[Any]) \
     for label in y_true + y_pred:
         assert label in labels, \
             f"All labels from y_true and y_pred should be in labels, missing {label}"
-    raise NotImplementedError
+
+    # create empty matrix of correct size
+    # because need to handle additional rows in the matrix that aren’t in the true/predicted labels
+    matrix = []
+    for row in range(len(labels)):
+        matrix.append([])
+        for col in range(len(labels)):
+            matrix[row].append(0)
+
+    for row in range(len(labels)):
+        for col in range(len(labels)):
+            for i in range(len(y_true)):
+                if (labels[row] == y_true[i] and labels[col] == y_pred[i]):
+                    matrix[col][row] += 1
+
+    return matrix
