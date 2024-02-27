@@ -1,6 +1,7 @@
 from typing import Dict, List
 from util import get_char_ngrams, load_data, normalize, argmax
 import math
+from collections import defaultdict, Counter
 
 
 class NBLangIDModel:
@@ -26,31 +27,18 @@ class NBLangIDModel:
             train_labels (List[str]): labels from the training data
         """
 
-        ngram_counts = {} # dict of dict
-        lang_counts = {} # amount of sents of each lang for us in self.prior
-        ngram_list = [] # set of all ngrams
+        ngram_counts = defaultdict(lambda: defaultdict(int)) # dict of dict
+        lang_counts = Counter(train_labels) # amount of sents of each lang for us in self.prior
+        ngram_list = set() # set of all ngrams
 
         for i in range(len(train_sentences)):
             ngrams = get_char_ngrams(train_sentences[i], self.ngram_size)
             lang = train_labels[i]
             
-            if lang not in lang_counts:
-                lang_counts[lang] = 1
-            else:
-                lang_counts[lang] += 1
-                
-            if lang not in ngram_counts:
-                ngram_counts[lang] = {}
-
             for ngram in ngrams:
                 
                 if ngram not in ngram_list: #running list of all ngrams
-                    ngram_list.append(ngram)
-                
-                if ngram not in ngram_counts:
-                    
-                    ngram_counts[lang][ngram] = 0
-                    
+                    ngram_list.add(ngram)
                 
                 ngram_counts[lang][ngram] += 1
 
@@ -60,22 +48,16 @@ class NBLangIDModel:
         for lang_key in ngram_counts.keys():
             
             for unique_ngram in ngram_list:
-                
-                if unique_ngram not in ngram_counts[lang_key]:
-                    ngram_counts[lang_key][unique_ngram] = 1
-                else:
-                    ngram_counts[lang_key][unique_ngram] += 1
+        
+                ngram_counts[lang_key][unique_ngram] += 1
             
             #normalize probabilities
             ngram_probs[lang_key] = normalize(ngram_counts[lang_key], log_prob=True)
         
         self._likelihoods = ngram_probs
-        
-        for lang in lang_counts.keys():
-            lang_counts[lang] = math.log(lang_counts[lang]/len(train_sentences))
-        
+   
         #self.prior is a dict of span: # of sentences in spanish / total # of sentences
-        self.prior = lang_counts
+        self.prior = {lang: math.log(lang_count / len(train_sentences)) for lang, lang_count in lang_counts.items()}
         
     def predict(self, test_sentences: List[str]) -> List[str]:
         """

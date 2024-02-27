@@ -14,11 +14,7 @@ def accuracy_score(y_true: List[Any], y_pred: List[Any]) -> float:
     Returns:
         float: accuracy score
     """
-    correct = 0
-
-    for i in range(len(y_true)):
-        if (y_true[i] == y_pred[i]):
-            correct += 1
+    correct = sum(1 for true, pred in zip(y_true, y_pred) if pred == true)
 
     score = correct / len(y_true)
 
