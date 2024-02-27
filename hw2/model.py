@@ -37,8 +37,7 @@ class NBLangIDModel:
             
             for ngram in ngrams:
                 
-                if ngram not in ngram_list: #running list of all ngrams
-                    ngram_list.add(ngram)
+                ngram_list.add(ngram) #running list of all ngrams
                 
                 ngram_counts[lang][ngram] += 1
 
