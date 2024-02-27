@@ -100,7 +100,7 @@ class NBLangIDModel:
                         
             predictions.append(argmax(lang_likelihood))
 
-        return lang_likelihood
+        return predictions
                                      
                     
 
