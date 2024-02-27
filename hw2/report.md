@@ -19,16 +19,16 @@ How many hours did you spend on this assignment?
 ### Group Member #2
 _Delete this section if you worked alone_
 * Your middlebury email: lschweitzer@middlebury.edu
-* How many hours did you spend on outside of class on CS 457 this week, _excluding this assignment_?
+* How many hours did you spend on outside of class on CS 457 this week, _excluding this assignment_? 4.5-5.5
 
 ## Report
 ### Evaluating evaluation metrics
 #### What is one advantage of using accuracy over a confusion matrix to evaluate your model?
-- easier to quickly assess model
+Accuracy is an easier method to quickly assess our model. Accuracy is straightforward and easy to understand, whereas a confusion matrix can be complex and harder to understand.
 
 
 #### What is one advantage of using a confusion matrix over accuracy to evaluate your model?
-- more thorough and gives user a bigger picture
+A confusion matrix gives us a more thorough way to assess the performance of our model. It allows us to see specifically what is happening, occasionally reveal information where accuracy as an assessment measurement might be misleading. For example, if a training data set is unbalanced and 90% of the sentences are in english, a model that always predicts english will have a 90% accuracy rate on our training set. However, a confusion matrix would show that the model is consistently choosing english and therefore reveal that our model is making invalid predictions.
 
 
 #### Interpreting your confusion matrix
