@@ -59,8 +59,6 @@ class NBLangIDModel:
                 
                 n_gram_counts[lang][n_gram] += 1
 
-        print("n gram counts: ", n_gram_counts, "\n")
-
         n_gram_probs = {}
         
         #loop though and +1 for LaPlace smoothing, then normalize
@@ -73,25 +71,17 @@ class NBLangIDModel:
                 else:
                     n_gram_counts[lang_key][unique_n_gram] += 1
             
-            print("n gram counts after adding one: ", n_gram_counts[lang_key], "\n")
-            
-            # this is where we are messing up -- I think we are calling the wrong values
-            # she may be expecting our dictionary to be a different format
+            #normalize probabilities
             n_gram_probs[lang_key] = normalize(n_gram_counts[lang_key], log_prob=True)
         
-        print("n_gram_count post adding 1 and normalizing", n_gram_probs, "\n")
-        
-        # self._likelihoods is a dict of dict where [to: [spanish: # of to's in spanish+1/# of ngrams], etc.]
         self._likelihoods = n_gram_probs
         
         for lang in lang_counts.keys():
-            lang_counts[lang] = math.log(lang_counts[lang]/len(train_sentences)) #changed this to accommodate logs
+            lang_counts[lang] = math.log(lang_counts[lang]/len(train_sentences))
         
         #self.prior is a dict of span: # of sentences in spanish / total # of sentences
         self.prior = lang_counts
         
-        print("self likelihoods: ", self._likelihoods, "\n self.prior:", self.prior, "\n")
-
     def predict(self, test_sentences: List[str]) -> List[str]:
         """
         Predict labels for a list of sentences
@@ -106,14 +96,10 @@ class NBLangIDModel:
         
         for test_sentence in test_sentences:
             
-            lang_likelihood = self.predict_one_log_proba(test_sentence) #should normally be test sentences
-            
-            print("here!!!")
-            
+            lang_likelihood = self.predict_one_log_proba(test_sentence)
+                        
             predictions.append(argmax(lang_likelihood))
 
-            
-        print("lang_likelihood", lang_likelihood)
         return lang_likelihood
                                      
                     
@@ -133,7 +119,6 @@ class NBLangIDModel:
         lang_likelihood = {} # for each lang the likelihood of the sentence
             
         n_grams = get_char_ngrams(test_sentence, self.ngram_size) # ngrams in sentence
-        print("nGrams", n_grams)
         
         for n_gram in n_grams:
             
@@ -149,13 +134,10 @@ class NBLangIDModel:
                         
                         lang_likelihood[lang] += self._likelihoods[lang][n_gram] #add log probs
        
-        print("likelhood of each sentence: before", lang_likelihood, "\n") 
-        
+               
         for lang_key in lang_likelihood.keys():
                 
             lang_likelihood[lang_key] += self.prior[lang_key] # changed cause back to log probs
-        
-        print("likelhood of each sentence in log prob:", lang_likelihood, "\n") 
-                    
+                            
         return lang_likelihood       
         
