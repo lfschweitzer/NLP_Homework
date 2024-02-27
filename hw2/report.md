@@ -9,12 +9,11 @@ Classmates you talked to about this assignment:
 * Just each other
 
 How many hours did you spend on this assignment?
-* 8 
-* Note: review this value
+* 9
 
 ### Group Member #1
 * Your middlebury email: iethier@middlebury.edu
-* How many hours did you spend on outside of class on CS 457 this week, _excluding this assignment_? 4 or 5
+* How many hours did you spend on outside of class on CS 457 this week, _excluding this assignment_? 5
 
 ### Group Member #2
 _Delete this section if you worked alone_
@@ -34,7 +33,7 @@ A confusion matrix gives us a more thorough way to assess the performance of our
 #### Interpreting your confusion matrix
 _Choose a language from the data set. Given any knowledge that you have about properties about that language (e.g., writing system, language families), explain any unique properties of its row in the confusion matrix, including (a) performance compared to other languages, (b) languages that it is more likely to be predicted as than others, and (c) anything else you think is relevant._
 
-
+-- lots of overlap between Spanish and Italian
 
 
 ### Effects of priors

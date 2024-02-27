@@ -25,11 +25,6 @@ class NBLangIDModel:
             train_sentences (List[str]): sentences from the training data
             train_labels (List[str]): labels from the training data
         """
-       
-        # COUNT NGRAMS
-        # for each element in train_sentences: call get_char_ngrams with self.ngram_size
-            # add each result to dictionaries (figure this out more)
-            # add each result to our set of all 
 
         ngram_counts = {} # dict of dict
         lang_counts = {} # amount of sents of each lang for us in self.prior
