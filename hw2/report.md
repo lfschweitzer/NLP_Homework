@@ -33,7 +33,7 @@ A confusion matrix gives us a more thorough way to assess the performance of our
 #### Interpreting your confusion matrix
 _Choose a language from the data set. Given any knowledge that you have about properties about that language (e.g., writing system, language families), explain any unique properties of its row in the confusion matrix, including (a) performance compared to other languages, (b) languages that it is more likely to be predicted as than others, and (c) anything else you think is relevant._
 
--- lots of overlap between Spanish and Italian
+In our confusion matrix there is a lot of overlap between Spanish and Italian. More specifically the model often misidentified spanish as italian. This could be for a variety of reasons. They both have Latin roots and because of that they share a lot of vocabulary and grammatical rules. 
 
 
 ### Effects of priors
