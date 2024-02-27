@@ -100,8 +100,7 @@ class NBLangIDModel:
                         
             predictions.append(argmax(lang_likelihood))
 
-        return predictions
-                                     
+        return predictions                          
                     
 
     def predict_one_log_proba(self, test_sentence: str) -> Dict[str, float]:
