@@ -55,7 +55,7 @@ def confusion_matrix(y_true: List[Any], y_pred: List[Any], labels: List[Any]) \
     for row in range(len(labels)):
         for col in range(len(labels)):
             for i in range(len(y_true)):
-                if (labels[row] == y_true[i] and labels[col] == y_pred[i]):
-                    matrix[col][row] += 1
+                if (labels[col] == y_true[i] and labels[row] == y_pred[i]):
+                    matrix[row][col] += 1
 
     return matrix
