@@ -9,7 +9,7 @@ Classmates you talked to about this assignment:
 * Just each other
 
 How many hours did you spend on this assignment?
-* 9
+* 11
 
 ### Group Member #1
 * Your middlebury email: iethier@middlebury.edu
@@ -40,8 +40,8 @@ In our confusion matrix there is a lot of overlap between Spanish and Italian. M
 Update your code so that your prior is uniform, e.g., the probability for each of the 8 languages is $log\left(\frac{1}{8}\right)$. Then, answer the following questions.
 #### How do your results change? Why?
 
-
+We added self.prior = {lang: math.log(1 / 8) for lang in lang_counts.keys()} to line 60 so that our prior would be uniform for all 8 languages. Before making this change, we got an accuracy score of 0.9912527365395538 on the full data set. After setting self.prior to be uniform, we had an accuracy score of 0.9907846124609047. We believe this nominal difference is due to the self.prior value being a very small part of the many values being multiplied by each other (or added for log calculations). Our formula gives self.prior the same weight as each ngram in the sentence so changing the value won't make a huge difference.
 
 #### Describe a situation in which you might _want_ to use a uniform prior.
 
-
+While calculating self.prior does not take a lot of effort compared to the rest of the code, if a developer did want to have slightly fewer calculations in their code it is an easy step to remove. There also may be situations were a developer wants to continually add sentences to their training data without recalculating how many they have of each language -- allowing them to more dynamically expand their machine's capabilities without having to redo every calculation.

@@ -28,7 +28,7 @@ class NBLangIDModel:
         """
 
         ngram_counts = defaultdict(lambda: defaultdict(int)) # dict of dict
-        lang_counts = Counter(train_labels) # amount of sents of each lang for us in self.prior
+        lang_counts = Counter(train_labels) # count of sentences of each lang for use in self.prior
         ngram_list = set() # set of all ngrams
 
         for i in range(len(train_sentences)):
@@ -57,7 +57,7 @@ class NBLangIDModel:
    
         #self.prior is a dict of span: # of sentences in spanish / total # of sentences
         self.prior = {lang: math.log(lang_count / len(train_sentences)) for lang, lang_count in lang_counts.items()}
-        
+
     def predict(self, test_sentences: List[str]) -> List[str]:
         """
         Predict labels for a list of sentences
@@ -89,7 +89,6 @@ class NBLangIDModel:
         Returns:
             Dict[str, float]: mapping of language --> probability
         """
-        # assert not (self._priors is None or self._likelihoods is None) #"Cannot predict without a model!"
         
         lang_likelihood = {} # for each lang the likelihood of the sentence
             
@@ -102,17 +101,17 @@ class NBLangIDModel:
                 if lang not in lang_likelihood:
                     
                     if ngram in self._likelihoods[lang]:
-                        lang_likelihood[lang] = self._likelihoods[lang][ngram] #add log probs
+                        lang_likelihood[lang] = self._likelihoods[lang][ngram]
                 else:
                     
                     if ngram in self._likelihoods[lang]: # if we dont have ngram in training, ignore
                         
-                        lang_likelihood[lang] += self._likelihoods[lang][ngram] #add log probs
+                        lang_likelihood[lang] += self._likelihoods[lang][ngram] # addition cause log probs
        
                
         for lang_key in lang_likelihood.keys():
                 
-            lang_likelihood[lang_key] += self.prior[lang_key] # changed cause back to log probs
+            lang_likelihood[lang_key] += self.prior[lang_key] # addition cause log probs
                             
         return lang_likelihood       
         
