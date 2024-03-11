@@ -112,6 +112,11 @@ class NBLangIDModel:
         for lang_key in lang_likelihood.keys():
                 
             lang_likelihood[lang_key] += self.prior[lang_key] # addition cause log probs
+            
+        # if no evidence for any language because all ngrams are unseen
+        if not lang_likelihood:
+            # return probabilities that reflect only the priors
+            return {lang: self.prior[lang] for lang in self.prior}
                             
         return lang_likelihood       
         
